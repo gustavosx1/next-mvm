@@ -1,23 +1,26 @@
-import BeerProvider from "./Context/BeerContext.jsx"
+import Link from "next/link"
+import "./globals.css"
 
-
-async function getBeers() {
-  const res = await fetch("https://api.sampleapis.com/beers/ale", {
-    next: { revalidate: 60 }
-  })
-
-  return await res.json()
+export const metadata = {
+  title: "Cadastro Atletas MVM",
+  description: "Sistema de gerenciamento de atletas da seleção maranhense de vôlei master",
 }
 
 export default async function RootLayout({ children }) {
-  const Beers = await getBeers()
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body>
-        <BeerProvider data={Beers}>
+        <header>
+          <h1>Cadastro Atletas MVM</h1>
+          <nav>
+            <Link href="/Usuarios">Usuários</Link>
+            <Link href="/Cadastro">Cadastro</Link>
+          </nav>
+        </header>
+        <main className="container">
           {children}
-        </BeerProvider>
+        </main>
       </body>
-    </html >
+    </html>
   )
 }

@@ -34,9 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts",
-    "app/Beers/page.jsx",
-    "app/Beers/BeerList.jsx"
+    "**/*.mts"
   ],
   "exclude": [
     "node_modules"
