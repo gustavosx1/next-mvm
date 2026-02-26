@@ -13,7 +13,7 @@ export default async function RootLayout({ children }) {
         <header>
           <h1>Cadastro Atletas MVM</h1>
           <nav>
-            <Link href="/Usuarios">Usuários</Link>
+            <Link href="/Usuarios">Atletas</Link>
             <Link href="/Cadastro">Cadastro</Link>
           </nav>
         </header>

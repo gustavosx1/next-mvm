@@ -5,11 +5,11 @@
 }
 
 :root {
-  --primary: #2563eb;
-  --primary-dark: #1e40af;
-  --primary-light: #3b82f6;
-  --secondary: #10b981;
-  --danger: #ef4444;
+  --primary: #0052cc;
+  --primary-dark: #003d99;
+  --primary-light: #0066ff;
+  --secondary: #dc2626;
+  --danger: #991b1b;
   --background: #f9fafb;
   --surface: #ffffff;
   --text: #1f2937;
@@ -17,6 +17,10 @@
   --border: #e5e7eb;
   --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+  --red: #dc2626;
+  --blue: #0052cc;
+  --black: #000000;
+  --white: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -448,5 +452,42 @@ a:hover {
 
 .fade-in {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Foto do Usuário */
+.user-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 3px solid var(--primary);
+  box-shadow: var(--shadow);
+}
+
+.user-card-avatar {
+  flex-shrink: 0;
+}
+
+.user-details {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.user-tag {
+  display: inline-block;
+  background: var(--primary);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.user-tag.active {
+  background: #22c55e;
+}
+
+.user-tag.inactive {
+  background: var(--danger);
 }
 
