@@ -10,8 +10,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
       <body>
-        <header>
-          <h1>Cadastro Atletas MVM</h1>
+        <header>  
           <nav>
             <Link href="/Usuarios">Atletas</Link>
             <Link href="/Cadastro">Cadastro</Link>

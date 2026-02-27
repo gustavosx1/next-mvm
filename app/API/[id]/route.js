@@ -22,7 +22,7 @@ export async function DELETE(req, { params }) {
 
 export async function PUT(req, { params }) {
   try {
-    const { id } = params
+    const { id } = await params
     const form = await req.formData()
     const usuarioAtualizado = Object.fromEntries(form)
 
@@ -39,7 +39,7 @@ export async function PUT(req, { params }) {
 
 export async function PATCH(req, { params }) {
   try {
-    const { id } = params
+    const { id } = await params
     const body = await req.json()
     const { ativo } = body
 
