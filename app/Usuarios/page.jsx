@@ -5,13 +5,17 @@ import { useState, useEffect } from "react"
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([])
+  const [usuariosFiltrados, setUsuariosFiltrados] = useState([])
   const [senha, setSenha] = useState("")
   const [autenticado, setAutenticado] = useState(false)
 
   useEffect(() => {
     fetch("/API")
       .then(res => res.json())
-      .then(data => setUsuarios(data))
+      .then(data => {
+        setUsuarios(data);
+        setUsuariosFiltrados(data)
+      })
   }, [])
 
   function handleSubmit() {
@@ -43,6 +47,7 @@ export default function Usuarios() {
     }
     return idade
   }
+
 
   function converterFoto(foto) {
     // Se foto é string, retorna direto (já é base64)
@@ -84,6 +89,15 @@ export default function Usuarios() {
       })
   }
 
+  function handlePesquisa(e) {
+    const filtro = e.target.value.toLowerCase();
+    setUsuariosFiltrados(
+      usuarios.filter(usuario =>
+        usuario.nome.toLowerCase().includes(filtro)
+      )
+    );
+  }
+
   return (
     <div className="container" style={{ marginTop: '2rem', marginBottom: '2rem', padding: '0 1rem' }}>
       {!autenticado ? (
@@ -114,9 +128,16 @@ export default function Usuarios() {
             <Link href="/Cadastro" className="btn-primary" style={{ padding: '0.75rem 1.5rem', textDecoration: 'none', width: '100%', textAlign: 'center' }}>+ Novo Cadastro</Link>
           </div>
 
-          {usuarios.length > 0 ? (
+          <form style={{ marginBottom: '1rem' }}>
+            <div className="form-group">
+              <label htmlFor="nome">Pesquise Atleta Pelo Nome</label>
+              <input type="text" id="pesquisa" name="pesquisa" placeholder="Pesquise Atletas..." onChange={handlePesquisa} />
+            </div>
+          </form>
+
+          {usuariosFiltrados.length > 0 ? (
             <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
-              {usuarios.map((u) => {
+              {usuariosFiltrados.map((u) => {
                 const fotoBase64 = converterFoto(u.foto)
                 // Se já vem com prefixo data:image, usa direto; senão, adiciona prefixo
                 const fotoUrl = fotoBase64 && fotoBase64.startsWith('data:image/')
@@ -158,28 +179,28 @@ export default function Usuarios() {
                       </div>
 
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', fontSize: '0.875rem', marginTop: '1rem' }}>
-                       
-                       
+
+
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                        <div>
-                          <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Idade</p>
-                          <p style={{ fontWeight: 600, color: 'var(--text)' }}>{calcularIdade(u.nascimento)} anos</p>
-                        </div>
-                        <div>
-                          <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Posição</p>
-                          <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.posicao || '-'}</p>
-                        </div>
+                          <div>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Idade</p>
+                            <p style={{ fontWeight: 600, color: 'var(--text)' }}>{calcularIdade(u.nascimento)} anos</p>
+                          </div>
+                          <div>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Posição</p>
+                            <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.posicao || '-'}</p>
+                          </div>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-                        <div>
-                          <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Camisa Número</p>
-                          <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.camisaNr || '-'}</p>
+                          <div>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Camisa Número</p>
+                            <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.camisaNr || '-'}</p>
+                          </div>
+                          <div>
+                            <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Tamanho</p>
+                            <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.tamanho || '-'}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Tamanho</p>
-                          <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.tamanho || '-'}</p>
-                        </div>
-                         </div>
                         <div>
                           <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Altura</p>
                           <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.altura ? `${u.altura}m` : '-'}</p>
@@ -187,7 +208,7 @@ export default function Usuarios() {
                       </div>
 
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '0.5rem', fontSize: '0.875rem', marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-                         <div>
+                        <div>
                           <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>CPF</p>
                           <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.cpf}</p>
                         </div>
@@ -208,7 +229,7 @@ export default function Usuarios() {
                       <button onClick={() => handleRemove(u)} className="btn-danger" style={{ width: '100%', marginTop: '1rem' }}>
                         Remover
                       </button>
-                      
+
                     </div>
                   </div>
                 )
