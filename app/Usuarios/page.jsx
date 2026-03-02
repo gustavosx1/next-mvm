@@ -104,7 +104,7 @@ export default function Usuarios() {
         <div className="card" style={{ maxWidth: '400px', margin: '4rem auto' }}>
           <h2 style={{ marginBottom: '1.5rem' }}>Acesso Restrito</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Insira a senha para acessar a lista de atletas</p>
-          <div className="form-group">
+          <div className="form-group" style={{ marginBottom: '1rem' }}>
             <label htmlFor="senha">Senha</label>
             <input
               id="senha"
@@ -130,7 +130,7 @@ export default function Usuarios() {
 
           <form style={{ marginBottom: '1rem' }}>
             <div className="form-group">
-              <label htmlFor="nome">Pesquise Atleta Pelo Nome</label>
+              <label htmlFor="pesquisa">Pesquise Atleta Pelo Nome</label>
               <input type="text" id="pesquisa" name="pesquisa" placeholder="Pesquise Atletas..." onChange={handlePesquisa} />
             </div>
           </form>
@@ -194,7 +194,7 @@ export default function Usuarios() {
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
                           <div>
                             <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Camisa Número</p>
-                            <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.camisaNr || '-'}</p>
+                            <p style={{ fontWeight: 600, color: 'var(--text)' }}>{u.camisanr || '-'}</p>
                           </div>
                           <div>
                             <p style={{ color: 'var(--text-muted)', marginBottom: '0.25rem' }}>Tamanho</p>

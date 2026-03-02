@@ -12,7 +12,7 @@ export default function Cadastro() {
     telefone: "",
     altura: "",
     posicao: "",
-    camisaNr: "",
+    camisanr: "",
     tamanho: "",
   })
 
@@ -56,7 +56,7 @@ export default function Cadastro() {
       formData.append("nascimento", form.nascimento)
       formData.append("altura", form.altura)
       formData.append("posicao", form.posicao)
-      formData.append("camisaNr", form.camisaNr)
+      formData.append("camisanr", form.camisanr)
       formData.append("tamanho", form.tamanho)
       formData.append("ativo", true)
       if (foto) formData.append("foto", foto) // Enviar como base64 string
@@ -101,61 +101,61 @@ export default function Cadastro() {
             <input type="text" id="nome" name="nome" value={form.nome} placeholder="Digite seu nome completo" onChange={handleChange} required disabled={loading} />
           </div>
 
-         
-            <div className="form-group">
-              <label htmlFor="cpf">CPF *</label>
-              <input type="text" id="cpf" name="cpf" value={form.cpf} placeholder="000.000.000-00" onChange={handleChange} required disabled={loading} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="rg">RG *</label>
-              <input type="text" id="rg" name="rg" value={form.rg} placeholder="Digite seu RG" onChange={handleChange} required disabled={loading} />
-            </div>
-          
+
+          <div className="form-group">
+            <label htmlFor="cpf">CPF *</label>
+            <input type="text" id="cpf" name="cpf" value={form.cpf} placeholder="000.000.000-00" onChange={handleChange} required disabled={loading} />
+          </div>
+          <div className="form-group">
+            <label htmlFor="rg">RG *</label>
+            <input type="text" id="rg" name="rg" value={form.rg} placeholder="Digite seu RG" onChange={handleChange} required disabled={loading} />
+          </div>
+
 
           <div className="form-group">
             <label htmlFor="email">Email *</label>
             <input type="email" id="email" name="email" value={form.email} placeholder="seu@email.com" onChange={handleChange} required disabled={loading} />
           </div>
 
-          
-            <div className="form-group">
-              <label htmlFor="telefone">Telefone</label>
-              <input type="text" id="telefone" name="telefone" value={form.telefone} placeholder="(XX) 9XXXX-XXXX" onChange={handleChange} disabled={loading} />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+
+          <div className="form-group">
+            <label htmlFor="telefone">Telefone</label>
+            <input type="text" id="telefone" name="telefone" value={form.telefone} placeholder="(XX) 9XXXX-XXXX" onChange={handleChange} disabled={loading} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
             <div className="form-group">
               <label htmlFor="nascimento">Data de Nascimento *</label>
               <input type="date" id="nascimento" name="nascimento" value={form.nascimento} onChange={handleChange} required disabled={loading} />
             </div>
-          
-         
+
+
             <div className="form-group">
               <label htmlFor="altura">Altura(Cm)</label>
               <input type="text" id="altura" name="altura" value={form.altura} placeholder="175" onChange={handleChange} disabled={loading} />
             </div>
-            </div>
-            <div className="form-group">
-              <label htmlFor="posicao">Posição</label>
-              <input type="text" id="posicao" name="posicao" value={form.posicao} placeholder="Ex: Levantador" onChange={handleChange} disabled={loading} />
-            </div>
- <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-            <div className="form-group">
-              <label htmlFor="camisaNr">Camisa Número</label>
-              <input type="number" id="camisaNr" name="camisaNr" value={form.camisaNr} placeholder="Ex: 10" onChange={handleChange} disabled={loading} />
-            </div>
-          
-
-          <div className="form-group">
-            <label htmlFor="tamanho">Tamanho </label>
-            <select id="tamanho" name="tamanho" value={form.tamanho} onChange={handleChange} disabled={loading}>
-              <option value="">Selecione um tamanho</option>
-              <option value="P">P</option>
-              <option value="M">M</option>
-              <option value="G">G</option>
-              <option value="GG">GG</option>
-            </select>
           </div>
-</div>
+          <div className="form-group">
+            <label htmlFor="posicao">Posição</label>
+            <input type="text" id="posicao" name="posicao" value={form.posicao} placeholder="Ex: Levantador" onChange={handleChange} disabled={loading} />
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
+            <div className="form-group">
+              <label htmlFor="camisanr">Camisa Número</label>
+              <input type="text" id="camisanr" name="camisanr" placeholder="Ex: 10" onChange={handleChange} disabled={loading} />
+            </div>
+
+
+            <div className="form-group">
+              <label htmlFor="tamanho">Tamanho </label>
+              <select id="tamanho" name="tamanho" value={form.tamanho} onChange={handleChange} disabled={loading}>
+                <option value="">Selecione um tamanho</option>
+                <option value="P">P</option>
+                <option value="M">M</option>
+                <option value="G">G</option>
+                <option value="GG">GG</option>
+              </select>
+            </div>
+          </div>
           <div className="form-group">
             <label htmlFor="foto">Foto de Perfil</label>
             <input type="file" id="foto" name="foto" onChange={handleFileChange} accept="image/*" disabled={loading} />
