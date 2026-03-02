@@ -8,7 +8,9 @@ export default function Usuarios() {
   const [usuariosFiltrados, setUsuariosFiltrados] = useState([])
   const [senha, setSenha] = useState("")
   const [autenticado, setAutenticado] = useState(false)
-
+  const [loading, setLoading] = useState(false)
+  const [loadingId, setLoadingId] = useState(null);
+  ''
   useEffect(() => {
     fetch("/API")
       .then(res => res.json())
@@ -19,6 +21,8 @@ export default function Usuarios() {
   }, [])
 
   function handleSubmit() {
+    setLoading(true)
+
     fetch("/API/auth", {
       method: "POST",
       headers: {
@@ -34,6 +38,7 @@ export default function Usuarios() {
           alert("Senha incorreta!")
         }
       })
+    setLoading(false)
   }
 
   function calcularIdade(dataNascimento) {
@@ -58,23 +63,37 @@ export default function Usuarios() {
   }
 
   function handleToggleAtivo(u) {
+    setLoadingId(u.id);
+
     fetch(`/API/${u.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ativo: !u.ativo })
-    }).then(res => res.json())
+    })
+      .then(res => res.json())
       .then(data => {
         if (data.sucesso) {
-          setUsuarios(usuarios.map(usuario =>
-            usuario.id === u.id ? { ...usuario, ativo: !usuario.ativo } : usuario
-          ))
+          setUsuarios(prev =>
+            prev.map(usuario =>
+              usuario.id === u.id
+                ? { ...usuario, ativo: !usuario.ativo }
+                : usuario
+            )
+          );
+          setUsuariosFiltrados(prev =>
+            prev.map(usuario =>
+              usuario.id === u.id
+                ? { ...usuario, ativo: !usuario.ativo }
+                : usuario
+            )
+          );
         }
       })
+      .finally(() => setLoadingId(null));
   }
-
   function handleRemove(u) {
+
+    setLoading(true)
     fetch(`/API/${u.id}`, {
       method: "DELETE",
       headers: {
@@ -85,8 +104,9 @@ export default function Usuarios() {
         if (data.sucesso) {
           alert("Usuário removido com sucesso!")
           setUsuarios(usuarios.filter(usuario => usuario.id !== u.id))
+          setUsuariosFiltrados(usuarios.filter(usuario => usuario.id !== u.id))
         }
-      })
+      }).finally(() => setLoading(false))
   }
 
   function handlePesquisa(e) {
@@ -138,6 +158,7 @@ export default function Usuarios() {
           {usuariosFiltrados.length > 0 ? (
             <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
               {usuariosFiltrados.map((u) => {
+                const isLoading = loadingId === u.id;
                 const fotoBase64 = converterFoto(u.foto)
                 // Se já vem com prefixo data:image, usa direto; senão, adiciona prefixo
                 const fotoUrl = fotoBase64 && fotoBase64.startsWith('data:image/')
@@ -156,6 +177,7 @@ export default function Usuarios() {
 
                         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
                           <span className={`user-tag ${u.ativo ? 'active' : 'inactive'}`}>
+
                             {u.ativo ? '✓ Ativo' : '✗ Inativo'}
                           </span>
                           <button
@@ -171,8 +193,11 @@ export default function Usuarios() {
                               fontWeight: 500,
                               whiteSpace: 'nowrap'
                             }}
-                          >
-                            {u.ativo ? 'Desativar' : 'Ativar'}
+                          >{
+                              u.ativo
+                                ? (isLoading ? "Desativando..." : "Desativar")
+                                : (isLoading ? "Ativando..." : "Ativar")
+                            }
                           </button>
                         </div>
 
@@ -227,7 +252,7 @@ export default function Usuarios() {
                       </div>
 
                       <button onClick={() => handleRemove(u)} className="btn-danger" style={{ width: '100%', marginTop: '1rem' }}>
-                        Remover
+                        {loading ? 'Removendo...' : 'Remover'}
                       </button>
 
                     </div>
