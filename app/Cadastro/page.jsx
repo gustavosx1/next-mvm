@@ -171,7 +171,7 @@ export default function Cadastro() {
           </button>
 
         </form>
-      </div>
-    </div>
+      </div >
+    </div >
   )
 }

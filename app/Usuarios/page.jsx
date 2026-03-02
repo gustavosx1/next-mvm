@@ -11,6 +11,15 @@ export default function Usuarios() {
   const [loading, setLoading] = useState(false)
   const [loadingId, setLoadingId] = useState(null);
   ''
+  //Para impedir scroll na tela de login
+  useEffect(() => {
+    document.body.style.overflow = autenticado ? "auto" : "hidden";
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [autenticado]);
+
   useEffect(() => {
     fetch("/API")
       .then(res => res.json())
@@ -25,9 +34,7 @@ export default function Usuarios() {
 
     fetch("/API/auth", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ senha })
     })
       .then(res => res.json())
@@ -38,9 +45,8 @@ export default function Usuarios() {
           alert("Senha incorreta!")
         }
       })
-    setLoading(false)
+      .finally(() => setLoading(false))
   }
-
   function calcularIdade(dataNascimento) {
     if (!dataNascimento) return "N/A"
     const hoje = new Date()
@@ -121,7 +127,7 @@ export default function Usuarios() {
   return (
     <div className="container" style={{ marginTop: '2rem', marginBottom: '2rem', padding: '0 1rem' }}>
       {!autenticado ? (
-        <div className="card" style={{ maxWidth: '400px', margin: '4rem auto' }}>
+        <div className="card" style={{ maxWidth: '400px', margin: '1rem auto' }}>
           <h2 style={{ marginBottom: '1.5rem' }}>Acesso Restrito</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '2rem' }}>Insira a senha para acessar a lista de atletas</p>
           <div className="form-group" style={{ marginBottom: '1rem' }}>
@@ -136,7 +142,7 @@ export default function Usuarios() {
               onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
             />
           </div>
-          <button type="submit" onClick={handleSubmit} style={{ width: '100%' }}>Entrar</button>
+          <button type="submit" onClick={handleSubmit} style={{ width: '100%' }}>{loading ? 'Entrando...' : 'Entrar'}</button>
         </div>
       ) : (
         <>
