@@ -123,12 +123,16 @@ export default function Cadastro() {
             <input type="text" id="telefone" name="telefone" value={form.telefone} placeholder="(XX) 9XXXX-XXXX" onChange={handleChange} disabled={loading} />
           </div>
 
-          <div className="form-group">
-            <label htmlFor="nascimento">Data de Nascimento *</label>
-            <input type="date" id="nascimento" name="nascimento" value={form.nascimento} onChange={handleChange} required disabled={loading} />
+          <div style={{ display: 'grid', gridTemplateColumns: '4fr 1fr', gap: '1.5rem' }}>
+            <div className="form-group">
+              <label htmlFor="nascimento">Data de Nascimento *</label>
+              <input type="date" id="nascimento" name="nascimento" value={form.nascimento} onChange={handleChange} required disabled={loading} />
+            </div>
+            <div>
+
+            </div>
+
           </div>
-
-
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '1.5rem' }}>
             <div className="form-group">
               <label htmlFor="posicao">Posição</label>
