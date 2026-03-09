@@ -1,7 +1,10 @@
 "use client"
-
+import { ArrowUpAZ, ArrowDownAZ, ArrowUp01, ArrowDown01, Download } from "lucide-react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import ModalExport from "./modalExport.jsx"
+import { calcularIdade } from "../utils/calcularIdade"
+
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([])
@@ -10,7 +13,10 @@ export default function Usuarios() {
   const [autenticado, setAutenticado] = useState(false)
   const [loading, setLoading] = useState(false)
   const [loadingId, setLoadingId] = useState(null);
-  ''
+  const [sortedNome, setSortedNome] = useState(true)
+  const [sortedIdade, setSortedIdade] = useState(true)
+  const [modalView, setModalView] = useState(false)
+
   //Para impedir scroll na tela de login
   useEffect(() => {
     document.body.style.overflow = autenticado ? "auto" : "hidden";
@@ -29,9 +35,10 @@ export default function Usuarios() {
       })
   }, [])
 
+
+
   function handleSubmit() {
     setLoading(true)
-
     fetch("/API/auth", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -47,18 +54,6 @@ export default function Usuarios() {
       })
       .finally(() => setLoading(false))
   }
-  function calcularIdade(dataNascimento) {
-    if (!dataNascimento) return "N/A"
-    const hoje = new Date()
-    const nascimento = new Date(dataNascimento)
-    let idade = hoje.getFullYear() - nascimento.getFullYear()
-    const mes = hoje.getMonth() - nascimento.getMonth()
-    if (mes < 0 || (mes === 0 && hoje.getDate() < nascimento.getDate())) {
-      idade--
-    }
-    return idade
-  }
-
 
   function converterFoto(foto) {
     // Se foto é string, retorna direto (já é base64)
@@ -67,6 +62,7 @@ export default function Usuarios() {
     }
     return null
   }
+
 
   function handleToggleAtivo(u) {
     setLoadingId(u.id);
@@ -97,8 +93,8 @@ export default function Usuarios() {
       })
       .finally(() => setLoadingId(null));
   }
-  function handleRemove(u) {
 
+  function handleRemove(u) {
     setLoading(true)
     fetch(`/API/${u.id}`, {
       method: "DELETE",
@@ -115,6 +111,42 @@ export default function Usuarios() {
       }).finally(() => setLoading(false))
   }
 
+  function handleSortNome() {
+    setLoading(true)
+    if (sortedNome) {
+      setUsuariosFiltrados(
+        [...usuariosFiltrados].sort((a, b) => a.nome.localeCompare(b.nome))
+      )
+    } else {
+      setUsuariosFiltrados(
+        [...usuariosFiltrados].sort((a, b) => b.nome.localeCompare(a.nome))
+      )
+    }
+    setSortedNome(!sortedNome)
+    setLoading(false)
+  }
+
+  function handleDownloadFoto(fotoUrl, nome) {
+    const link = document.createElement('a')
+    link.href = fotoUrl
+    link.download = `${nome}.jpg`
+    link.click()
+  }
+
+  function handleSortIdade() {
+    setLoading(true)
+    if (sortedIdade) {
+      setUsuariosFiltrados(
+        [...usuariosFiltrados].sort((a, b) => calcularIdade(a.nascimento) - calcularIdade(b.nascimento)))
+    } else {
+      setUsuariosFiltrados(
+        [...usuariosFiltrados].sort((a, b) => calcularIdade(b.nascimento) - calcularIdade(a.nascimento)))
+    }
+    setSortedIdade(!sortedIdade)
+    setLoading(false)
+  }
+
+
   function handlePesquisa(e) {
     const filtro = e.target.value.toLowerCase();
     setUsuariosFiltrados(
@@ -126,6 +158,11 @@ export default function Usuarios() {
 
   return (
     <div className="container" style={{ marginTop: '2rem', marginBottom: '2rem', padding: '0 1rem' }}>
+      {
+        modalView && (
+          <ModalExport usuariosFiltrados={usuariosFiltrados} modalView={modalView} setModalView={setModalView} />
+        )
+      }
       {!autenticado ? (
         <div className="card" style={{ maxWidth: '400px', margin: '1rem auto' }}>
           <h2 style={{ marginBottom: '1.5rem' }}>Acesso Restrito</h2>
@@ -146,6 +183,7 @@ export default function Usuarios() {
         </div>
       ) : (
         <>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
             <div>
               <h2 style={{ marginBottom: '0.5rem' }}>Atletas MVM</h2>
@@ -161,6 +199,27 @@ export default function Usuarios() {
             </div>
           </form>
 
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.1rem', marginBottom: '1rem', maxWidth: '10rem' }}>
+            <button
+              onClick={() => handleSortNome()}
+              className="btn-sort"
+            >
+              {sortedNome ? <ArrowUpAZ size={16} /> : <ArrowDownAZ size={16} />}
+              {sortedNome ? "   NOME A-Z" : "   NOME Z-A"}
+            </button>
+            <button
+              onClick={() => handleSortIdade()}
+              className="btn-sort"
+            >
+              {sortedIdade ? <ArrowUp01 size={16} /> : <ArrowDown01 size={16} />}
+              {sortedIdade ? "   IDADE" : "   IDADE"}
+            </button>
+
+            <button onClick={() => setModalView(true)} className="btn-sort">
+              EXPORTAR XLS
+            </button>
+
+          </div>
           {usuariosFiltrados.length > 0 ? (
             <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
               {usuariosFiltrados.map((u) => {
@@ -207,6 +266,23 @@ export default function Usuarios() {
                           </button>
                         </div>
 
+                        <button
+                          onClick={() => handleDownloadFoto(fotoUrl, u.nome)}
+                          style={{
+                            marginTop: '1.5rem',
+                            alignSelf: 'center',
+                            padding: '0.35rem 0.75rem',
+                            fontSize: '0.75rem',
+                            backgroundColor: 'var(--primary)',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontWeight: 500,
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          <Download size={14} /> Baixar Foto</button>
                       </div>
 
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '1rem', fontSize: '0.875rem', marginTop: '1rem' }}>
@@ -272,7 +348,8 @@ export default function Usuarios() {
             </div>
           )}
         </>
-      )}
-    </div>
+      )
+      }
+    </div >
   )
 }
