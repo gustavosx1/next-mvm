@@ -21,6 +21,8 @@
   --blue: #0052cc;
   --black: #000000;
   --white: #ffffff;
+  --amber: #d97706;
+
 }
 
 @media (prefers-color-scheme: dark) {
@@ -205,7 +207,7 @@ button {
 }
 
 .btn-sort {
-  background-color: gray;
+  background-color: var(--primary-dark);
   max-width: 7rem;
   max-height: 3rem;
   padding: 0.35rem 0.75rem;

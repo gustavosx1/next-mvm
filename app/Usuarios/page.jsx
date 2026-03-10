@@ -4,7 +4,7 @@ import Link from "next/link"
 import { useState, useEffect } from "react"
 import ModalExport from "./modalExport.jsx"
 import { calcularIdade } from "../utils/calcularIdade"
-
+import ModalEdit from "./modalEdit.jsx"
 
 export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([])
@@ -16,6 +16,8 @@ export default function Usuarios() {
   const [sortedNome, setSortedNome] = useState(true)
   const [sortedIdade, setSortedIdade] = useState(true)
   const [modalView, setModalView] = useState(false)
+  const [editView, setEditView] = useState(false)
+  const [usuarioSelecionado, setUsuariosSelecionado] = useState(null)
 
   //Para impedir scroll na tela de login
   useEffect(() => {
@@ -34,8 +36,6 @@ export default function Usuarios() {
         setUsuariosFiltrados(data)
       })
   }, [])
-
-
 
   function handleSubmit() {
     setLoading(true)
@@ -146,7 +146,6 @@ export default function Usuarios() {
     setLoading(false)
   }
 
-
   function handlePesquisa(e) {
     const filtro = e.target.value.toLowerCase();
     setUsuariosFiltrados(
@@ -158,6 +157,10 @@ export default function Usuarios() {
 
   return (
     <div className="container" style={{ marginTop: '2rem', marginBottom: '2rem', padding: '0 1rem' }}>
+      {
+        editView && usuarioSelecionado && (
+          <ModalEdit usuario={usuarioSelecionado} setUsuarios={setUsuarios} setUsuariosFiltrados={setUsuariosFiltrados} setEditView={setEditView} />
+        )}
       {
         modalView && (
           <ModalExport usuariosFiltrados={usuariosFiltrados} modalView={modalView} setModalView={setModalView} />
@@ -337,7 +340,11 @@ export default function Usuarios() {
                         {loading ? 'Removendo...' : 'Remover'}
                       </button>
 
+                      <button onClick={() => { setUsuariosSelecionado(u); setEditView(true) }} className="btn-danger" style={{ backgroundColor: 'var(--amber)', width: '100%', marginTop: '1rem' }}>
+                        Editar
+                      </button>
                     </div>
+
                   </div>
                 )
               })}
